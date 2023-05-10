@@ -30,7 +30,7 @@ public class Pong implements ActionListener, KeyListener {
         };
 
         leftPaddle = new Paddle(0, HEIGHT / 2 - Paddle.PADDLE_HEIGHT / 2);
-        rightPaddle = new Paddle(WIDTH - Paddle.PADDLE_WIDTH, HEIGHT / 2 - Paddle.PADDLE_HEIGHT / 2);
+        rightPaddle = new Paddle(WIDTH - Paddle.PADDLE_WIDTH - 10, HEIGHT / 2 - Paddle.PADDLE_HEIGHT / 2);
         ball = new Ball(WIDTH / 2 - Ball.BALL_SIZE / 2, HEIGHT / 2 - Ball.BALL_SIZE / 2);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,12 +56,14 @@ public class Pong implements ActionListener, KeyListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        leftPaddle.update();
-        rightPaddle.update();
+        leftPaddle.update(false, null);
+        rightPaddle.update(true, ball);
         ball.update(leftPaddle, rightPaddle);
 
         panel.repaint();
     }
+
+
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -76,6 +78,12 @@ public class Pong implements ActionListener, KeyListener {
         } else if (key == KeyEvent.VK_DOWN) {
             rightPaddle.setDown(true);
         }
+
+        if (key == KeyEvent.VK_W) {
+            leftPaddle.setUp(true);
+        } else if (key == KeyEvent.VK_S) {
+            leftPaddle.setDown(true);
+        }
     }
 
     @Override
@@ -87,7 +95,14 @@ public class Pong implements ActionListener, KeyListener {
         } else if (key == KeyEvent.VK_DOWN) {
             rightPaddle.setDown(false);
         }
+
+        if (key == KeyEvent.VK_W) {
+            leftPaddle.setUp(false);
+        } else if (key == KeyEvent.VK_S) {
+            leftPaddle.setDown(false);
+        }
     }
+
 
     public static void main(String[] args) {
         new Pong();

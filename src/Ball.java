@@ -22,8 +22,10 @@ public class Ball {
         x += xVelocity;
         y += yVelocity;
 
-        if (y < 0 || y + BALL_SIZE > Pong.HEIGHT) {
-            yVelocity = -yVelocity;
+        if (y <= 0) {
+            yVelocity = BALL_SPEED;
+        } else if (y + BALL_SIZE >= Pong.HEIGHT) {
+            yVelocity = -BALL_SPEED;
         }
 
         if (x < leftPaddle.getX() + Paddle.PADDLE_WIDTH &&
@@ -35,6 +37,7 @@ public class Ball {
             xVelocity = -xVelocity;
         }
     }
+
 
     public int getX() {
         return x;

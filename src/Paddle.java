@@ -22,13 +22,21 @@ public class Paddle {
         g.fillRect(x, y, PADDLE_WIDTH, PADDLE_HEIGHT);
     }
 
-    public void update() {
-        if (up && y > 0) {
-            y -= PADDLE_SPEED;
-        }
+    public void update(boolean isAI, Ball ball) {
+        if (isAI) {
+            if (ball.getY() < y) {
+                y -= PADDLE_SPEED;
+            } else if (ball.getY() > y) {
+                y += PADDLE_SPEED;
+            }
+        } else {
+            if (up && y > 0) {
+                y -= PADDLE_SPEED;
+            }
 
-        if (down && y + PADDLE_HEIGHT < Pong.HEIGHT) {
-            y += PADDLE_SPEED;
+            if (down && y + PADDLE_HEIGHT < Pong.HEIGHT) {
+                y += PADDLE_SPEED;
+            }
         }
     }
 
