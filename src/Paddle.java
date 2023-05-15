@@ -4,15 +4,17 @@ public class Paddle {
 
     public static final int PADDLE_WIDTH = 10;
     public static final int PADDLE_HEIGHT = 80;
-    public static final int PADDLE_SPEED = 5;
+    public static final int PADDLE_SPEED = 10;
 
     private int x;
     private int y;
+    private int aiDifficulty;
     private boolean up, down;
 
-    public Paddle(int x, int y) {
+    public Paddle(int x, int y, int aiDifficulty) {
         this.x = x;
         this.y = y;
+        this.aiDifficulty = aiDifficulty;
         up = false;
         down = false;
     }
@@ -24,11 +26,36 @@ public class Paddle {
 
     public void update(boolean isAI, Ball ball) {
         if (isAI) {
-            if (ball.getY() < y) {
-                y -= PADDLE_SPEED;
-            } else if (ball.getY() > y) {
-                y += PADDLE_SPEED;
+            double targetY = ball.getY() + (ball.getYVelocity() * (x - ball.getX()) / ball.getXVelocity());
+
+            targetY -= PADDLE_HEIGHT / 2;
+            targetY = Math.max(targetY, 0);
+            targetY = Math.min(targetY, Pong.HEIGHT - PADDLE_HEIGHT);
+
+            double diffY = targetY - y;
+
+            int paddleSpeedAI;
+
+            switch (aiDifficulty) {
+                case 1: // Easy Mode
+                    paddleSpeedAI = 6;
+                    break;
+                case 2: // Medium Mode
+                    paddleSpeedAI = 8;
+                    break;
+                case 3: // Hard Mode
+                    paddleSpeedAI = 10;
+                    break;
+                default:
+                    paddleSpeedAI = 6;
             }
+
+            if (diffY > 0) {
+                y += Math.min(diffY, paddleSpeedAI);
+            } else {
+                y -= Math.min(-diffY, paddleSpeedAI);
+            }
+
         } else {
             if (up && y > 0) {
                 y -= PADDLE_SPEED;
@@ -38,7 +65,13 @@ public class Paddle {
                 y += PADDLE_SPEED;
             }
         }
+
+        y = Math.max(y, 0);
+        y = Math.min(y, Pong.HEIGHT - PADDLE_HEIGHT);
     }
+
+
+
 
     public void setUp(boolean up) {
         this.up = up;
